@@ -18,20 +18,24 @@ export const AuthProvider = ({ children }) => {
   // Sign up
   const signup = async (email, password, name) => {
     try {
-      // Create auth user
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      
-      const role = 'student'; // System is strictly student-only right now
-      
-      // Store additional user data in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
+      const role = 'student';
+
+      const userData = {
         uid: user.uid,
         email: user.email,
         name: name,
         role: role,
         createdAt: new Date().toISOString()
-      });
+      };
+
+      // Store in Firestore
+      await setDoc(doc(db, 'users', user.uid), userData);
+
+      // Set state immediately so navigation works
+      setCurrentUser(userData);
+      setUserRole(role);
 
       return user;
     } catch (error) {
@@ -44,7 +48,20 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      return userCredential.user;
+      const user = userCredential.user;
+
+      // Fetch user profile from Firestore immediately
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        setCurrentUser(userData);
+        setUserRole(userData.role);
+      } else {
+        setCurrentUser({ uid: user.uid, email: user.email, name: 'Student' });
+        setUserRole('student');
+      }
+
+      return user;
     } catch (error) {
       console.error("Login error:", error);
       throw error;
