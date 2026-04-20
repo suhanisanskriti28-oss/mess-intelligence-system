@@ -5,9 +5,10 @@ import { useAuth } from '../../hooks/useAuth';
 import { useComplaints } from '../../hooks/useComplaints';
 import { useEffect } from 'react';
 import { getTodayMenu, getCurrentVendor } from '../../services/menuService';
-import { getTodayFeedbackStats } from '../../services/feedbackService';
+import { getTodayFeedbackStats, getUserFeedback } from '../../services/feedbackService';
 import MealReputation from '../../components/student/MealReputation';
 import ComplaintCard from '../../components/student/ComplaintCard';
+import FeedbackCard from '../../components/student/FeedbackCard';
 import MealPassModal from '../../components/student/MealPassModal';
 import Loader from '../../components/common/Loader';
 
@@ -21,6 +22,8 @@ const StudentHome = () => {
     Lunch: { average: 0, count: 0 },
     Dinner: { average: 0, count: 0 }
   });
+  const [personalFeedback, setPersonalFeedback] = useState([]);
+  const [statsLoading, setStatsLoading] = useState(true);
 
   // Fetch Menu & Vendor
   const dailyMenu = getTodayMenu();
@@ -28,7 +31,12 @@ const StudentHome = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
-      const stats = await getTodayFeedbackStats();
+      setStatsLoading(true);
+      const [stats, history] = await Promise.all([
+        getTodayFeedbackStats(),
+        getUserFeedback(currentUser.uid)
+      ]);
+
       if (stats && stats.meals) {
         setScores({
           Breakfast: stats.meals.Breakfast,
@@ -36,9 +44,13 @@ const StudentHome = () => {
           Dinner: stats.meals.Dinner
         });
       }
+      setPersonalFeedback(history);
+      setStatsLoading(false);
     };
-    fetchStats();
-  }, []);
+    if (currentUser?.uid) {
+      fetchStats();
+    }
+  }, [currentUser]);
 
   // Sort complaints by most voted and take top 5
   const topComplaints = useMemo(() => {
@@ -120,7 +132,9 @@ const StudentHome = () => {
         {/* Reputation & Complaints */}
         <div className="lg:col-span-2 flex flex-col space-y-8">
           <div>
-            <h2 className="text-xl font-bold text-primary mb-4">Meal Reputation</h2>
+            <h2 className="text-xl font-bold text-primary mb-4 flex items-center justify-between">
+              Meal Reputation <span className="text-[10px] text-gray-400 uppercase tracking-widest">(Community Average)</span>
+            </h2>
             <div className="responsive-grid border border-transparent">
               <MealReputation mealType="Breakfast" score={scores.Breakfast.average} count={scores.Breakfast.count} />
               <MealReputation mealType="Lunch" score={scores.Lunch.average} count={scores.Lunch.count} />
@@ -160,6 +174,29 @@ const StudentHome = () => {
                   >
                     Post a new complaint
                   </Link>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* My Private Feedback History */}
+          <div>
+            <h2 className="text-xl font-bold text-primary mb-4">My Private Feedback</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {personalFeedback.length > 0 ? (
+                personalFeedback.slice(0, 2).map((item) => (
+                  <FeedbackCard 
+                    key={item.id}
+                    mealType={item.mealType}
+                    rating={item.rating}
+                    comment={item.comment}
+                    dateString={item.dateString}
+                    photoUrl={item.photoUrl}
+                  />
+                ))
+              ) : (
+                <div className="sm:col-span-2 bg-[#FDF5E6] border border-[#E8E8D5] rounded-xl p-8 text-center border-dashed">
+                  <p className="text-gray-500 font-medium">No feedback submitted yet. Your private history will appear here.</p>
                 </div>
               )}
             </div>

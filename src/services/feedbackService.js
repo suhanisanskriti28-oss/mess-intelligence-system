@@ -4,6 +4,8 @@ import {
   getDocs, 
   query,
   where,
+  orderBy,
+  limit,
   serverTimestamp
 } from 'firebase/firestore';
 import { db } from './firebase';
@@ -103,8 +105,24 @@ export const getTodayFeedbackStats = async () => {
         }
       }
     };
+  }
+};
+
+export const getUserFeedback = async (userId) => {
+  try {
+    const q = query(
+      collection(db, 'feedbacks'),
+      where("userId", "==", userId),
+      orderBy("timestamp", "desc"),
+      limit(5)
+    );
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
   } catch (error) {
-    console.error("Error fetching feedback stats:", error);
-    return { averageRating: 0, totalCount: 0, meals: { Breakfast: 0, Lunch: 0, Dinner: 0 } };
+    console.error("Error fetching user feedback:", error);
+    return [];
   }
 };
