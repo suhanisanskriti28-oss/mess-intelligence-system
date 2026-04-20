@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
@@ -14,16 +14,11 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
-// Student Pages
-import StudentHome from './pages/student/StudentHome';
-import FeedbackPage from './pages/student/FeedbackPage';
-import ComplaintsPage from './pages/student/ComplaintsPage';
-import VendorSelection from './pages/student/VendorSelection';
-
-// Admin Pages
-import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminComplaints from './pages/admin/AdminComplaints';
-import AdminFeedbackPage from './pages/admin/AdminFeedbackPage';
+// Student Pages (Lazy Loaded for Advanced React Concepts)
+const StudentHome = lazy(() => import('./pages/student/StudentHome'));
+const FeedbackPage = lazy(() => import('./pages/student/FeedbackPage'));
+const ComplaintsPage = lazy(() => import('./pages/student/ComplaintsPage'));
+const VendorSelection = lazy(() => import('./pages/student/VendorSelection'));
 
 function App() {
   return (
@@ -60,23 +55,6 @@ function App() {
                   <Route path="/student/vendors" element={
                     <ProtectedRoute allowedRole="student">
                       <VendorSelection />
-                    </ProtectedRoute>
-                  } />
-
-                  {/* Admin Protected Routes */}
-                  <Route path="/admin/dashboard" element={
-                    <ProtectedRoute allowedRole="admin">
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/admin/complaints" element={
-                    <ProtectedRoute allowedRole="admin">
-                      <AdminComplaints />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/admin/feedback" element={
-                    <ProtectedRoute allowedRole="admin">
-                      <AdminFeedbackPage />
                     </ProtectedRoute>
                   } />
 

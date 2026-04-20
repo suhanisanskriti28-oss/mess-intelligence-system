@@ -8,7 +8,6 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('student');
   const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
   const navigate = useNavigate();
@@ -27,13 +26,9 @@ const Signup = () => {
 
     setLoading(true);
     try {
-      await signup(email, password, name, role);
+      await signup(email, password, name);
       toast.success("Account created successfully!");
-      if (role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/student/home'); 
-      }
+      navigate('/student/home'); 
     } catch (error) {
       console.error(error);
       toast.error(error.message || "Failed to create account");
@@ -47,32 +42,10 @@ const Signup = () => {
       <div className="max-w-md w-full mx-auto bg-[#FDF5E6] border-panelBorder rounded-3xl shadow-xl shadow-primary/10 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 transition-all duration-500 p-8 space-y-6 animate-fade-in relative z-10 border-b-4 border-r-4 border-primary/5">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold text-[#800000]">Create an account</h2>
-          <p className="text-[#4A3728] mt-2 font-medium">Join Mess Intel</p>
+          <p className="text-[#4A3728] mt-2 font-medium">Join Mess Intel as a student</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-6">
-          {/* Role Selection */}
-          <div className="flex rounded-md shadow-sm p-1 bg-white border border-[#E8E8D5] mb-4">
-            <button
-              type="button"
-              onClick={() => setRole('student')}
-              className={`flex-1 flex justify-center items-center py-2 px-4 rounded-md text-sm font-bold transition-all ${
-                role === 'student' ? 'bg-[#FDF5E6] text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Student
-            </button>
-            <button
-              type="button"
-              onClick={() => setRole('admin')}
-              className={`flex-1 flex justify-center items-center py-2 px-4 rounded-md text-sm font-bold transition-all ${
-                role === 'admin' ? 'bg-[#FDF5E6] text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Admin
-            </button>
-          </div>
-
           <div>
             <label className="block tracking-wide text-[#4A3728] text-sm font-bold mb-2">
               Full Name

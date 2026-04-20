@@ -8,10 +8,11 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // Sign up
-  const signup = async (email, password, name, role = 'student') => {
+  const signup = async (email, password, name) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         const user = { uid: Date.now().toString(), email, name };
+        const role = 'student'; // default
         
         // Save user to "users" table in localStorage
         const users = JSON.parse(localStorage.getItem('users') || '[]');

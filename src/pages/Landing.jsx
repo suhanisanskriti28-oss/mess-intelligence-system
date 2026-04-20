@@ -8,8 +8,7 @@ const Landing = () => {
 
   // Redirect if already logged in
   if (currentUser) {
-    if (userRole === 'admin') return <Navigate to="/admin/dashboard" replace />;
-    if (userRole === 'student') return <Navigate to="/student/home" replace />;
+    return <Navigate to="/student/home" replace />;
   }
 
   return (
@@ -53,10 +52,10 @@ const Landing = () => {
               Get Started — Student Login
             </Link>
             <Link
-              to="/login"
+              to="/signup"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#FDF5E6] border border-[#E8E8D5] hover:border-primary/30 text-[#4A3728] rounded-xl font-bold text-sm sm:text-base transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 duration-200"
             >
-              Admin Portal
+              Create Account
             </Link>
           </div>
         </div>

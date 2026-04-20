@@ -18,20 +18,12 @@ const Navbar = () => {
     }
   };
 
-  const navLinks = userRole === 'admin' 
-    ? [
-        { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={16} /> },
-        { name: 'Complaints', path: '/admin/complaints', icon: <MessageSquare size={16} /> },
-        { name: 'Feedback', path: '/admin/feedback', icon: <Utensils size={16} /> }
-      ]
-    : userRole === 'student'
-      ? [
-          { name: 'Home', path: '/student/home', icon: <Utensils size={16} /> },
-          { name: 'Feedback', path: '/student/feedback', icon: <MessageSquare size={16} /> },
-          { name: 'Complaints', path: '/student/complaints', icon: <MessageSquare size={16} /> },
-          { name: 'Vendors', path: '/student/vendors', icon: <Store size={16} /> }
-        ]
-      : [];
+  const navLinks = [
+    { name: 'Home', path: '/student/home', icon: <Utensils size={16} /> },
+    { name: 'Feedback', path: '/student/feedback', icon: <MessageSquare size={16} /> },
+    { name: 'Complaints', path: '/student/complaints', icon: <MessageSquare size={16} /> },
+    { name: 'Vendors', path: '/student/vendors', icon: <Store size={16} /> }
+  ];
 
   if (!currentUser) return null;
 
@@ -46,7 +38,7 @@ const Navbar = () => {
               <Utensils className="h-5 w-5 text-white" />
             </div>
             <Link
-              to={userRole === 'admin' ? '/admin/dashboard' : '/student/home'}
+              to="/student/home"
               className="font-extrabold text-xl tracking-tight text-primary"
             >
               Mess Intel
