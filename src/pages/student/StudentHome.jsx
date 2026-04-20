@@ -121,7 +121,7 @@ const StudentHome = () => {
         <div className="lg:col-span-2 flex flex-col space-y-8">
           <div>
             <h2 className="text-xl font-bold text-primary mb-4">Meal Reputation</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border border-transparent">
+            <div className="responsive-grid border border-transparent">
               <MealReputation mealType="Breakfast" score={scores.Breakfast} />
               <MealReputation mealType="Lunch" score={scores.Lunch} />
               <MealReputation mealType="Dinner" score={scores.Dinner} />

@@ -82,12 +82,12 @@ export const getTodayFeedbackStats = async () => {
     });
 
     return {
-      averageRating: todayFeedbacks.length ? (totalRating / todayFeedbacks.length).toFixed(1) : 0,
+      averageRating: todayFeedbacks.length ? Number((totalRating / todayFeedbacks.length).toFixed(1)) : 0,
       totalCount: todayFeedbacks.length,
       meals: {
-        Breakfast: meals.Breakfast.count ? (meals.Breakfast.total / meals.Breakfast.count).toFixed(1) : 0,
-        Lunch: meals.Lunch.count ? (meals.Lunch.total / meals.Lunch.count).toFixed(1) : 0,
-        Dinner: meals.Dinner.count ? (meals.Dinner.total / meals.Dinner.count).toFixed(1) : 0,
+        Breakfast: meals.Breakfast.count ? Number((meals.Breakfast.total / meals.Breakfast.count).toFixed(1)) : 0,
+        Lunch: meals.Lunch.count ? Number((meals.Lunch.total / meals.Lunch.count).toFixed(1)) : 0,
+        Dinner: meals.Dinner.count ? Number((meals.Dinner.total / meals.Dinner.count).toFixed(1)) : 0,
       }
     };
   } catch (error) {

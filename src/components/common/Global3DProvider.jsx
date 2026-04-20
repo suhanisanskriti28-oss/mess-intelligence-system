@@ -7,11 +7,12 @@ import {
 } from '../3d/FoodModels';
 
 // The entire group of food items orbits / shifts with the mouse for parallax
-const FriendlyFoodFragments = ({ mouseX, mouseY }) => {
+const FriendlyFoodFragments = ({ mouseX, mouseY, isMobile }) => {
   const groupRef = useRef();
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
+    const factor = isMobile ? 0.2 : 1;
     // Smooth-lerp the entire group toward the mouse offset
     groupRef.current.rotation.y += (mouseX * 0.4 - groupRef.current.rotation.y) * 0.06;
     groupRef.current.rotation.x += (-mouseY * 0.3 - groupRef.current.rotation.x) * 0.06;
@@ -52,19 +53,28 @@ const FriendlyFoodFragments = ({ mouseX, mouseY }) => {
         <CupcakeModel position={[-5, -4, -7]} scale={0.9} />
       </Float>
 
-      {/* Cupcake — upper right back */}
-      <Float speed={2.2} rotationIntensity={0.8} floatIntensity={1.8}>
-        <CupcakeModel position={[7, 5, -12]} scale={1.1} />
-      </Float>
+      {!isMobile && (
+        <>
+          {/* Cupcake — upper right back */}
+          <Float speed={2.2} rotationIntensity={0.8} floatIntensity={1.8}>
+            <CupcakeModel position={[7, 5, -12]} scale={1.1} />
+          </Float>
+
+          {/* Toffee — upper left */}
+          <Float speed={1.4} rotationIntensity={0.9} floatIntensity={1.1}>
+            <ToffeeModel position={[-7, 5, -13]} scale={1.2} />
+          </Float>
+
+          {/* Chocolate Bar — upper left back */}
+          <Float speed={1.1} rotationIntensity={0.9} floatIntensity={0.7}>
+            <ChocolateBarModel position={[-8, 2, -14]} scale={1.2} rotation={[-0.2, 0.8, 0.1]} />
+          </Float>
+        </>
+      )}
 
       {/* Toffee — right mid */}
       <Float speed={2.0} rotationIntensity={1.2} floatIntensity={1.6}>
         <ToffeeModel position={[8, -2, -9]} scale={1.0} />
-      </Float>
-
-      {/* Toffee — upper left */}
-      <Float speed={1.4} rotationIntensity={0.9} floatIntensity={1.1}>
-        <ToffeeModel position={[-7, 5, -13]} scale={1.2} />
       </Float>
 
       {/* Toffee — lower center back */}
@@ -77,11 +87,6 @@ const FriendlyFoodFragments = ({ mouseX, mouseY }) => {
         <ChocolateBarModel position={[4, -5, -10]} scale={1.0} rotation={[0.3, 0.5, 0]} />
       </Float>
 
-      {/* Chocolate Bar — upper left back */}
-      <Float speed={1.1} rotationIntensity={0.9} floatIntensity={0.7}>
-        <ChocolateBarModel position={[-8, 2, -14]} scale={1.2} rotation={[-0.2, 0.8, 0.1]} />
-      </Float>
-
       <ContactShadows position={[0, -6, 0]} opacity={0.2} scale={25} blur={2.5} far={14} color="#800000" />
     </group>
   );
@@ -89,6 +94,16 @@ const FriendlyFoodFragments = ({ mouseX, mouseY }) => {
 
 const Global3DProvider = ({ children }) => {
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Raw DOM mouse tracking — more responsive than Three.js pointer state
   useEffect(() => {
@@ -106,17 +121,20 @@ const Global3DProvider = ({ children }) => {
     <div className="relative min-h-screen w-full bg-[#FDFBF7] text-[#4A3728] overflow-hidden transition-colors duration-500">
 
       {/* Universal 3D Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
-          <ambientLight intensity={0.8} />
-          <directionalLight position={[10, 10, 5]} intensity={1.5} color="#FFFFFF" />
-          <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#FFF8DC" />
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Only render 3D on non-mini devices for performance and responsiveness */}
+        {window.innerWidth > 480 && (
+          <Canvas camera={{ position: [0, 0, 10], fov: 45 }} gl={{ antialias: !isMobile, powerPreference: 'high-performance' }}>
+            <ambientLight intensity={0.8} />
+            <directionalLight position={[10, 10, 5]} intensity={1.5} color="#FFFFFF" />
+            <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#FFF8DC" />
 
-          <Suspense fallback={null}>
-            <FriendlyFoodFragments mouseX={mouse.x} mouseY={mouse.y} />
-            <Environment preset="city" />
-          </Suspense>
-        </Canvas>
+            <Suspense fallback={null}>
+              <FriendlyFoodFragments mouseX={mouse.x} mouseY={mouse.y} isMobile={isMobile} />
+              <Environment preset="city" />
+            </Suspense>
+          </Canvas>
+        )}
       </div>
 
       {/* Main App Content */}

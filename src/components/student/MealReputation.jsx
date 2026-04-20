@@ -12,7 +12,7 @@ const MealReputation = ({ mealType, score }) => {
       </div>
       <h3 className="text-lg font-semibold text-[#4A3728] tracking-tight mb-1">{mealType}</h3>
       <div className="flex items-end justify-center gap-1 mb-2 text-[#4A3728]">
-        <span className="text-3xl font-bold">{score.toFixed(1)}</span>
+        <span className="text-3xl font-bold">{Number(score).toFixed(1)}</span>
         <span className="text-gray-500 text-sm mb-1">/ 5.0</span>
       </div>
       <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-[#FDF5E6] border border-[#E8E8D5] shadow-xl shadow-primary/10 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1 transition-all duration-300 ${status.textValue}`}>

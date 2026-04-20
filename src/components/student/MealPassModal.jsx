@@ -16,8 +16,8 @@ const MealPassModal = ({ isOpen, onClose, user }) => {
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-[#FDF5E6] border-panelBorder rounded-2xl shadow-xl w-full max-w-sm overflow-hidden transform transition-all relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto">
+      <div className="bg-[#FDF5E6] border-panelBorder rounded-2xl shadow-xl w-full max-w-sm overflow-hidden transform transition-all relative my-4">
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 p-1.5 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 transition-colors"
