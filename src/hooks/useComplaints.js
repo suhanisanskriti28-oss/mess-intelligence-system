@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { getComplaints, createComplaint, voteOnComplaint } from '../services/complaintService';
+import { fetchAllComplaints, submitComplaint, voteComplaint } from '../services/complaintService';
 
 export const useComplaints = () => {
   const [complaints, setComplaints] = useState([]);
@@ -9,7 +9,7 @@ export const useComplaints = () => {
   const fetchComplaints = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getComplaints();
+      const data = await fetchAllComplaints();
       setComplaints(data);
     } catch (err) {
       setError(err.message);
@@ -23,7 +23,7 @@ export const useComplaints = () => {
   }, [fetchComplaints]);
 
   const addComplaint = useCallback(async (title, description, category, authorId, authorName) => {
-    const response = await createComplaint(title, description, category, authorId, authorName);
+    const response = await submitComplaint(authorId, title, description, category, authorName);
     if (response.success) {
       await fetchComplaints(); // Refresh list immediately
     }
@@ -31,15 +31,15 @@ export const useComplaints = () => {
   }, [fetchComplaints]);
 
   const handleVote = useCallback(async (complaintId, userId, voteValue) => {
-    const response = await voteOnComplaint(complaintId, userId, voteValue);
+    const response = await voteComplaint(complaintId, userId, voteValue);
     if (response.success) {
       // Optimistic update
       setComplaints(prev => prev.map(c => {
         if (c.id === complaintId) {
           return {
             ...c,
-            voteCount: response.newVoteCount,
-            votes: response.newVotes
+            voteCount: response.voteCount,
+            votes: response.votes
           };
         }
         return c;

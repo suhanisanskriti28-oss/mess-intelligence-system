@@ -1,3 +1,12 @@
+import { 
+  collection, 
+  doc, 
+  getDoc, 
+  setDoc,
+  serverTimestamp
+} from 'firebase/firestore';
+import { db } from './firebase';
+
 // Hardcoded mock data for the 3 distinct vendors
 export const VENDORS = [
   {
@@ -77,21 +86,30 @@ export const getVendors = async () => {
 };
 
 export const optInVendor = async (userId, vendorId) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const optIns = JSON.parse(localStorage.getItem('vendor_opt_ins') || '{}');
-      optIns[userId] = vendorId;
-      localStorage.setItem('vendor_opt_ins', JSON.stringify(optIns));
-      resolve({ success: true, vendorId });
-    }, 500);
-  });
+  try {
+    const docRef = doc(db, 'vendor_opt_ins', userId);
+    await setDoc(docRef, {
+      userId,
+      vendorId,
+      timestamp: serverTimestamp()
+    });
+    return { success: true, vendorId };
+  } catch (error) {
+    console.error("Error opting into vendor:", error);
+    return { success: false, error };
+  }
 };
 
 export const getStudentOptIn = async (userId) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const optIns = JSON.parse(localStorage.getItem('vendor_opt_ins') || '{}');
-      resolve(optIns[userId] || null); // Returns vendorId or null
-    }, 200);
-  });
+  try {
+    const docRef = doc(db, 'vendor_opt_ins', userId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data().vendorId;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching vendor opt-in:", error);
+    return null;
+  }
 };

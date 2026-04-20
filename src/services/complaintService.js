@@ -1,92 +1,84 @@
-export const createComplaint = async (title, description, category, authorId, authorName) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const newComplaint = {
-        id: Date.now().toString(),
-        title,
-        description,
-        category,
-        authorId,
-        authorName,
-        votes: {},
-        voteCount: 0,
-        status: 'open',
-        createdAt: { toDate: () => new Date() } // Mocking Firebase Timestamp
-      };
+import { 
+  collection, 
+  addDoc, 
+  getDocs, 
+  doc, 
+  updateDoc, 
+  serverTimestamp,
+  getDoc
+} from 'firebase/firestore';
+import { db } from './firebase';
 
-      const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
-      complaints.push({ ...newComplaint, createdAt: Date.now() }); // save raw timestamp to storage
-      localStorage.setItem('complaints', JSON.stringify(complaints));
-
-      resolve({ success: true, id: newComplaint.id });
-    }, 500);
-  });
+export const submitComplaint = async (userId, title, description, category, authorName) => {
+  try {
+    const newComplaint = {
+      userId,
+      title,
+      description,
+      category,
+      authorName,
+      status: 'open',
+      voteCount: 0,
+      votes: {}, // Object map: { userId: voteValue (1 or -1) }
+      createdAt: serverTimestamp()
+    };
+    
+    const docRef = await addDoc(collection(db, 'complaints'), newComplaint);
+    return { success: true, id: docRef.id };
+  } catch (error) {
+    console.error("Error submitting complaint:", error);
+    return { success: false, error };
+  }
 };
 
-export const getComplaints = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
-      // Re-add the mock toDate function for compatibility with components
-      const formatted = complaints.map(c => ({
-        ...c,
-        createdAt: typeof c.createdAt === 'number' 
-          ? { toDate: () => new Date(c.createdAt) } 
-          : { toDate: () => new Date() }
-      }));
-      // Sort desc
-      formatted.sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate());
-      resolve(formatted);
-    }, 200);
-  });
+export const fetchAllComplaints = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'complaints'));
+    const complaints = [];
+    querySnapshot.forEach((doc) => {
+      complaints.push({ id: doc.id, ...doc.data() });
+    });
+    
+    // Process local timestamps if serverTimestamp hasn't resolved yet
+    complaints.sort((a, b) => {
+      const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : Date.now();
+      const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : Date.now();
+      return timeB - timeA; // Descending
+    });
+    
+    return complaints;
+  } catch (error) {
+    console.error("Error fetching complaints:", error);
+    return [];
+  }
 };
 
-export const voteOnComplaint = async (complaintId, userId, voteValue) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
-      const complaintIndex = complaints.findIndex(c => c.id === complaintId);
+export const voteComplaint = async (complaintId, userId, voteValue) => {
+  try {
+    const complaintRef = doc(db, 'complaints', complaintId);
+    const complaintSnap = await getDoc(complaintRef);
+    
+    if (complaintSnap.exists()) {
+      const data = complaintSnap.data();
+      const currentVotes = data.votes || {};
+      const previousVote = currentVotes[userId] || 0;
       
-      if (complaintIndex !== -1) {
-        const data = complaints[complaintIndex];
-        const currentVotes = data.votes || {};
-        let newVoteCount = data.voteCount || 0;
-        const previousUserVote = currentVotes[userId] || 0;
-        
-        if (previousUserVote === voteValue) {
-          newVoteCount -= voteValue;
-          currentVotes[userId] = 0;
-        } else {
-          newVoteCount = newVoteCount - previousUserVote + voteValue;
-          currentVotes[userId] = voteValue;
-        }
-        
-        data.votes = currentVotes;
-        data.voteCount = newVoteCount;
-        complaints[complaintIndex] = data;
-        
-        localStorage.setItem('complaints', JSON.stringify(complaints));
-        resolve({ success: true, newVoteCount, newVotes: currentVotes });
-      } else {
-        resolve({ success: false, error: "Complaint not found" });
-      }
-    }, 200);
-  });
-};
-
-export const markComplaintResolved = async (complaintId) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
-      const complaintIndex = complaints.findIndex(c => c.id === complaintId);
+      let newVoteCount = data.voteCount || 0;
       
-      if (complaintIndex !== -1) {
-        complaints[complaintIndex].status = 'resolved';
-        localStorage.setItem('complaints', JSON.stringify(complaints));
-        resolve({ success: true });
-      } else {
-        resolve({ success: false, error: "Complaint not found" });
-      }
-    }, 200);
-  });
+      // Remove previous vote weight, add new vote weight
+      newVoteCount = newVoteCount - previousVote + voteValue;
+      
+      const newVotes = { ...currentVotes, [userId]: voteValue };
+      
+      await updateDoc(complaintRef, {
+        voteCount: newVoteCount,
+        votes: newVotes
+      });
+      return { success: true, voteCount: newVoteCount, votes: newVotes };
+    }
+    return { success: false };
+  } catch (error) {
+    console.error("Error voting:", error);
+    return { success: false, error };
+  }
 };
