@@ -8,11 +8,10 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // Sign up
-  const signup = async (email, password, name) => {
+  const signup = async (email, password, name, role = 'student') => {
     return new Promise((resolve) => {
       setTimeout(() => {
         const user = { uid: Date.now().toString(), email, name };
-        const role = 'student'; // default
         
         // Save user to "users" table in localStorage
         const users = JSON.parse(localStorage.getItem('users') || '[]');
@@ -36,17 +35,6 @@ export const AuthProvider = ({ children }) => {
         const users = JSON.parse(localStorage.getItem('users') || '[]');
         const user = users.find(u => u.email === email && u.password === password);
         
-        // Magic backdoor for admin testing instantly
-        if (email === 'admin@mess.com' || password === 'admin123') {
-          const adminUser = { uid: 'admin_999', email: 'admin@mess.com', name: 'Master Admin' };
-          localStorage.setItem('currentUser', JSON.stringify(adminUser));
-          localStorage.setItem('userRole', 'admin');
-          setCurrentUser(adminUser);
-          setUserRole('admin');
-          resolve(adminUser);
-          return;
-        }
-
         if (user) {
           const { password: _, ...safeUser } = user;
           localStorage.setItem('currentUser', JSON.stringify(safeUser));

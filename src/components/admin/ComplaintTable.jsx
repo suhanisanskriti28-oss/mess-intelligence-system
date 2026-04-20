@@ -23,7 +23,7 @@ const ComplaintTable = ({ complaints, onRefresh }) => {
     <div className="bg-[#FDF5E6] border-panelBorder rounded-xl shadow-xl shadow-primary/10 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1 transition-all duration-300 border border-panelBorder overflow-hidden">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-darkBg">
+          <thead className="bg-[#FDFBF7]">
             <tr>
               <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
                 Complaint
@@ -44,7 +44,7 @@ const ComplaintTable = ({ complaints, onRefresh }) => {
           </thead>
           <tbody className="bg-[#FDF5E6] border-panelBorder divide-y divide-gray-200">
             {complaints.map((complaint) => (
-              <tr key={complaint.id} className="hover:bg-darkBg transition-colors">
+              <tr key={complaint.id} className="hover:bg-primary/5 transition-colors">
                 <td className="px-6 py-4">
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold text-gray-900 line-clamp-1">{complaint.title}</span>
@@ -55,7 +55,7 @@ const ComplaintTable = ({ complaints, onRefresh }) => {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 border border-panelBorder">
+                  <span className="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-primary/10 text-primary border border-primary/20">
                     {complaint.category}
                   </span>
                 </td>
@@ -78,7 +78,7 @@ const ComplaintTable = ({ complaints, onRefresh }) => {
                     <button
                       onClick={() => handleResolve(complaint.id)}
                       disabled={resolvingId === complaint.id}
-                      className="text-primary hover:text-indigo-900 disabled:opacity-50"
+                      className="text-primary hover:text-primaryHover font-bold disabled:opacity-50 transition-colors"
                     >
                       {resolvingId === complaint.id ? 'Resolving...' : 'Resolve'}
                     </button>

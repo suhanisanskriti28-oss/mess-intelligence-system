@@ -21,7 +21,8 @@ const Navbar = () => {
   const navLinks = userRole === 'admin' 
     ? [
         { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={16} /> },
-        { name: 'Complaints', path: '/admin/complaints', icon: <MessageSquare size={16} /> }
+        { name: 'Complaints', path: '/admin/complaints', icon: <MessageSquare size={16} /> },
+        { name: 'Feedback', path: '/admin/feedback', icon: <Utensils size={16} /> }
       ]
     : userRole === 'student'
       ? [

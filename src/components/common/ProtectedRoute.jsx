@@ -15,9 +15,13 @@ const ProtectedRoute = ({ children, allowedRole }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // If the role doesn't match, redirect to the student home
+  // If the role doesn't match, redirect to their home
   if (allowedRole && userRole !== allowedRole) {
-    return <Navigate to="/student/home" replace />;
+    if (userRole === 'admin') {
+      return <Navigate to="/admin/dashboard" replace />;
+    } else {
+      return <Navigate to="/student/home" replace />;
+    }
   }
 
   return children;
