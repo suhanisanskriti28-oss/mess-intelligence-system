@@ -17,9 +17,9 @@ const StudentHome = () => {
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
   const [scores, setScores] = useState({
-    Breakfast: 0,
-    Lunch: 0,
-    Dinner: 0
+    Breakfast: { average: 0, count: 0 },
+    Lunch: { average: 0, count: 0 },
+    Dinner: { average: 0, count: 0 }
   });
 
   // Fetch Menu & Vendor
@@ -31,9 +31,9 @@ const StudentHome = () => {
       const stats = await getTodayFeedbackStats();
       if (stats && stats.meals) {
         setScores({
-          Breakfast: stats.meals.Breakfast || 0,
-          Lunch: stats.meals.Lunch || 0,
-          Dinner: stats.meals.Dinner || 0
+          Breakfast: stats.meals.Breakfast,
+          Lunch: stats.meals.Lunch,
+          Dinner: stats.meals.Dinner
         });
       }
     };
@@ -55,7 +55,7 @@ const StudentHome = () => {
       {/* Header & QR Action */}
       <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-primary tracking-tight">Welcome, {currentUser?.displayName || 'Student'}! 👋</h1>
+          <h1 className="text-3xl font-extrabold text-primary tracking-tight">Welcome, {currentUser?.name || 'Student'}! 👋</h1>
           <p className="text-[#4A3728]/70 mt-1">Check today's menu and your meal reputation.</p>
         </div>
         <div className="flex gap-3">
@@ -122,9 +122,9 @@ const StudentHome = () => {
           <div>
             <h2 className="text-xl font-bold text-primary mb-4">Meal Reputation</h2>
             <div className="responsive-grid border border-transparent">
-              <MealReputation mealType="Breakfast" score={scores.Breakfast} />
-              <MealReputation mealType="Lunch" score={scores.Lunch} />
-              <MealReputation mealType="Dinner" score={scores.Dinner} />
+              <MealReputation mealType="Breakfast" score={scores.Breakfast.average} count={scores.Breakfast.count} />
+              <MealReputation mealType="Lunch" score={scores.Lunch.average} count={scores.Lunch.count} />
+              <MealReputation mealType="Dinner" score={scores.Dinner.average} count={scores.Dinner.count} />
             </div>
           </div>
 
