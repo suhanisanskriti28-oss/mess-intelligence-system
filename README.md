@@ -126,3 +126,17 @@ The application is deployed and accessible at:
 * **Firebase Cloud Storage**: Integration for photo uploads in feedback submissions
 * **Push Notifications**: Real-time alerts for complaint status updates
 * **Data Visualization**: Advanced charts and trend analysis for meal quality over time
+
+---
+
+## 👩‍💻 Author
+
+Sanskriti Suhani  
+
+Personal Project
+
+---
+
+## 📜 License
+
+This project is for personal and educational use.
