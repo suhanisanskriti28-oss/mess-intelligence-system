@@ -28,7 +28,7 @@ export const VENDORS = [
       Thursday:  { Breakfast: ["Upma", "Coconut Chutney", "Coffee"], Lunch: ["Kadhai Paneer", "Butter Roti", "Rice"], Dinner: ["Palak Dal", "Aloo Gobi", "Roti"] },
       Friday:    { Breakfast: ["Kachori", "Sabzi", "Chai"], Lunch: ["Boondi Raita", "Pulao", "Mix Veg"], Dinner: ["Shahi Paneer", "Naan", "Kheer"] },
       Saturday:  { Breakfast: ["Idli Sambar", "Coconut Chutney"], Lunch: ["Dal Makhani", "Jeera Rice", "Papad"], Dinner: ["Veg Biryani", "Raita", "Gulab Jamun"] },
-      Sunday:    { Breakfast: ["Puri", "Aloo Bhaji", "Halwa"], Lunch: ["Special Thali — Dal, Sabzi, Roti, Rice, Dessert"], Dinner: ["Paneer Do Pyaza", "Pulao", "Ice Cream"] }
+      Sunday:    { Breakfast: ["Puri", "Aloo Bhaji", "Halwa"], Lunch: ["Special Thali, Dal, Sabzi, Roti, Rice, Dessert"], Dinner: ["Paneer Do Pyaza", "Pulao", "Ice Cream"] }
     }
   },
   {
@@ -50,7 +50,7 @@ export const VENDORS = [
       Thursday:  { Breakfast: ["Croissant", "Jam", "Coffee"], Lunch: ["Fried Rice", "Chilli Paneer", "Soup"], Dinner: ["Creamy Tomato Pasta", "Bread Roll", "Ice Cream"] },
       Friday:    { Breakfast: ["Waffles", "Honey", "Fresh Fruit"], Lunch: ["Egg Bhurji / Paneer Bhurji", "Paratha", "Pickle"], Dinner: ["Spaghetti Bolognese (Veg)", "Garlic Bread"] },
       Saturday:  { Breakfast: ["Omelette", "Toast", "Juice"], Lunch: ["Biryani (Veg/Chicken)", "Raita", "Pickle"], Dinner: ["Mezze Platter", "Pita", "Dip", "Brownie"] },
-      Sunday:    { Breakfast: ["Pancake Stack", "Syrup", "Juice"], Lunch: ["Sunday Special Thali"], Dinner: ["Pizza Night — Margherita or Mix Veg", "Soft Drink"] }
+      Sunday:    { Breakfast: ["Pancake Stack", "Syrup", "Juice"], Lunch: ["Sunday Special Thali"], Dinner: ["Pizza Night, Margherita or Mix Veg", "Soft Drink"] }
     }
   },
   {
@@ -72,7 +72,7 @@ export const VENDORS = [
       Thursday:  { Breakfast: ["Poached Eggs", "Toast", "OJ"], Lunch: ["Veg Hot Dog", "Fries", "Milkshake"], Dinner: ["BBQ Paneer Bowl", "Rice", "Coleslaw"] },
       Friday:    { Breakfast: ["Granola Bowl", "Yogurt", "Berries"], Lunch: ["Double Decker Burger", "Onion Rings"], Dinner: ["Brownie Sizzler", "Ice Cream", "Waffle Sandwich"] },
       Saturday:  { Breakfast: ["Grilled Sandwich", "Dip Sauce", "Coffee"], Lunch: ["Tex-Mex Bowl", "Chips", "Dip"], Dinner: ["Cheesy Veg Pizza", "Soft Drink"] },
-      Sunday:    { Breakfast: ["Cold Coffee", "Muffin", "Fruit Bowl"], Lunch: ["Sunday Brunch Spread — Sliders, Rolls, Fries"], Dinner: ["Cheesy Pasta", "Brownie Sizzler", "Juice"] }
+      Sunday:    { Breakfast: ["Cold Coffee", "Muffin", "Fruit Bowl"], Lunch: ["Sunday Brunch Spread, Sliders, Rolls, Fries"], Dinner: ["Cheesy Pasta", "Brownie Sizzler", "Juice"] }
     }
   }
 ];

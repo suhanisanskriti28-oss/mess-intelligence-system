@@ -35,7 +35,7 @@ const Login = () => {
 
   return (
     <div className="min-h-[calc(100vh-100px)] flex items-center justify-center p-4">
-      <div className="max-w-md w-full mx-auto bg-[#FDF5E6] border-panelBorder rounded-3xl shadow-xl shadow-primary/10 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 transition-all duration-500 p-8 space-y-6 animate-fade-in relative z-10 border-b-4 border-r-4 border-primary/5">
+      <div className="max-w-md w-full mx-auto bg-[#FDF5E6] rounded-3xl shadow-[0_20px_60px_-15px_rgba(128,0,0,0.4)] hover:shadow-[0_30px_70px_-15px_rgba(74,55,40,0.5)] hover:-translate-y-2 transition-all duration-500 p-8 space-y-6 animate-fade-in relative z-10 border-b-4 border-r-4 border-primary/20">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold text-[#800000]">Welcome back</h2>
           <p className="text-[#4A3728] mt-2 font-medium">Sign in to your dashboard</p>

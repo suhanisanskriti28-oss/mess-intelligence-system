@@ -143,7 +143,7 @@ const VendorSelection = () => {
           {locked ? (
             <div className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 bg-red-50 border border-red-200 rounded-full shadow-sm text-red-700 font-semibold text-sm">
               <Lock size={15} />
-              Selection locked — opens again on the 1st of next month
+              Selection locked, opens again on the 1st of next month
             </div>
           ) : (
             <div className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 bg-green-50 border border-green-200 rounded-full shadow-sm text-green-700 font-semibold text-sm">
