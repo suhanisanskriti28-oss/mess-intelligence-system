@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { ArrowBigUp, ArrowBigDown, Clock, CheckCircle2 } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Clock, CheckCircle2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 const ComplaintCard = ({ complaint, onVote, currentUserId }) => {
@@ -31,19 +31,21 @@ const ComplaintCard = ({ complaint, onVote, currentUserId }) => {
         <button 
           onClick={handleUpvote}
           disabled={isResolved}
-          className={`p-1 rounded hover:bg-orange-100 transition-colors ${userVote === 1 ? 'text-primary' : 'text-gray-400'}`}
+          className={`p-2 rounded-full hover:bg-orange-100 transition-all ${userVote === 1 ? 'text-primary scale-110' : 'text-gray-400 opacity-60'}`}
+          title="Like"
         >
-          <ArrowBigUp className={`h-7 w-7 ${userVote === 1 ? 'fill-primary' : ''}`} />
+          <ThumbsUp className={`h-6 w-6 ${userVote === 1 ? 'fill-primary' : ''}`} />
         </button>
-        <span className={`font-bold my-1 ${userVote === 1 ? 'text-primary' : userVote === -1 ? 'text-red-500' : 'text-[#4A3728]'}`}>
+        <span className={`font-bold my-1 text-sm ${userVote === 1 ? 'text-primary' : userVote === -1 ? 'text-red-500' : 'text-[#4A3728]'}`}>
           {voteCount || 0}
         </span>
         <button 
           onClick={handleDownvote}
           disabled={isResolved}
-          className={`p-1 rounded hover:bg-orange-100 transition-colors ${userVote === -1 ? 'text-red-500' : 'text-gray-400'}`}
+          className={`p-2 rounded-full hover:bg-red-50 transition-all ${userVote === -1 ? 'text-red-500 scale-110' : 'text-gray-400 opacity-60'}`}
+          title="Dislike"
         >
-          <ArrowBigDown className={`h-7 w-7 ${userVote === -1 ? 'fill-red-500' : ''}`} />
+          <ThumbsDown className={`h-6 w-6 ${userVote === -1 ? 'fill-red-500' : ''}`} />
         </button>
       </div>
 

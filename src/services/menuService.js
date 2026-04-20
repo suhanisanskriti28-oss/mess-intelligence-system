@@ -41,8 +41,10 @@ const WEEKLY_MENU = {
 };
 
 export const getTodayMenu = () => {
-  const today = new Date().getDay(); // 0 is Sunday, 1 is Monday...
-  return WEEKLY_MENU[today];
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const today = new Date().getDay();
+  const todayName = dayNames[today];
+  return VENDOR_OF_THE_MONTH.fullMenu[todayName];
 };
 
 export const getCurrentVendor = () => {

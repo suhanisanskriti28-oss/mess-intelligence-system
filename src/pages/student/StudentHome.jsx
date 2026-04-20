@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { PlusCircle, Utensils, QrCode, Star, ChefHat } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useComplaints } from '../../hooks/useComplaints';
+import { useEffect } from 'react';
 import { getTodayMenu, getCurrentVendor } from '../../services/menuService';
+import { getTodayFeedbackStats } from '../../services/feedbackService';
 import MealReputation from '../../components/student/MealReputation';
 import ComplaintCard from '../../components/student/ComplaintCard';
 import MealPassModal from '../../components/student/MealPassModal';
@@ -14,9 +16,29 @@ const StudentHome = () => {
   const { complaints, handleVote, loading } = useComplaints();
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
+  const [scores, setScores] = useState({
+    Breakfast: 0,
+    Lunch: 0,
+    Dinner: 0
+  });
+
   // Fetch Menu & Vendor
   const dailyMenu = getTodayMenu();
   const vendor = getCurrentVendor();
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const stats = await getTodayFeedbackStats();
+      if (stats && stats.meals) {
+        setScores({
+          Breakfast: stats.meals.Breakfast || 0,
+          Lunch: stats.meals.Lunch || 0,
+          Dinner: stats.meals.Dinner || 0
+        });
+      }
+    };
+    fetchStats();
+  }, []);
 
   // Sort complaints by most voted and take top 5
   const topComplaints = useMemo(() => {
@@ -24,13 +46,6 @@ const StudentHome = () => {
       .sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0))
       .slice(0, 5);
   }, [complaints]);
-
-  // Mock scores for today
-  const mockScores = {
-    Breakfast: 4.2,
-    Lunch: 2.8,
-    Dinner: 3.5
-  };
 
   if (loading) return <Loader text="Loading your dashboard..." />;
 
@@ -40,7 +55,7 @@ const StudentHome = () => {
       {/* Header & QR Action */}
       <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-primary tracking-tight">Welcome, {currentUser?.displayName?.split(' ')[0] || 'Student'}! 👋</h1>
+          <h1 className="text-3xl font-extrabold text-primary tracking-tight">Welcome, {currentUser?.displayName || 'Student'}! 👋</h1>
           <p className="text-[#4A3728]/70 mt-1">Check today's menu and your meal reputation.</p>
         </div>
         <div className="flex gap-3">
@@ -107,9 +122,9 @@ const StudentHome = () => {
           <div>
             <h2 className="text-xl font-bold text-primary mb-4">Meal Reputation</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border border-transparent">
-              <MealReputation mealType="Breakfast" score={mockScores.Breakfast} />
-              <MealReputation mealType="Lunch" score={mockScores.Lunch} />
-              <MealReputation mealType="Dinner" score={mockScores.Dinner} />
+              <MealReputation mealType="Breakfast" score={scores.Breakfast} />
+              <MealReputation mealType="Lunch" score={scores.Lunch} />
+              <MealReputation mealType="Dinner" score={scores.Dinner} />
             </div>
           </div>
 
