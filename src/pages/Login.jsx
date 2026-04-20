@@ -22,9 +22,7 @@ const Login = () => {
     try {
       await login(email, password);
       toast.success("Successfully logged in!");
-      // Navigation is handled by ProtectedRoute automatically checking state
-      // but we can ensure a forced redirect to home handled there or here
-      navigate('/'); 
+      navigate('/student/home'); 
     } catch (error) {
       console.error(error);
       toast.error("Failed to log in. Please check your credentials.");
